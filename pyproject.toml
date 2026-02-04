@@ -19,6 +19,7 @@ dependencies = [
     "python-multipart>=0.0.22",
     "slowapi>=0.1.9",
     "structlog>=25.5.0",
+    "tzdata>=2025.3",
     "uvicorn[standard]>=0.40.0",
 ]
 
