@@ -1,0 +1,1261 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Tech Polarity API",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Admin Login",
+                "operationId": "admin_login_api_v1_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home/main-article": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Main Article",
+                "operationId": "main_article_api_v1_home_main_article_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArticleSummary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home/related-articles": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Related Articles",
+                "operationId": "related_articles_api_v1_home_related_articles_get",
+                "parameters": [
+                    {
+                        "name": "exclude_slug",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Exclude Slug"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 8,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ArticleSummary"
+                                    },
+                                    "title": "Response Related Articles Api V1 Home Related Articles Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home/tech-barometer": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Tech Barometer",
+                "operationId": "tech_barometer_api_v1_home_tech_barometer_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home/trending": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Trending By Domain",
+                "operationId": "trending_by_domain_api_v1_home_trending_get",
+                "parameters": [
+                    {
+                        "name": "domain_slug",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Domain Slug"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TrendingArticle"
+                                    },
+                                    "title": "Response Trending By Domain Api V1 Home Trending Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/{slug}": {
+            "get": {
+                "tags": [
+                    "Articles",
+                    "Articles"
+                ],
+                "summary": "Get Article",
+                "operationId": "get_article_api_v1_articles__slug__get",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArticleDetail"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Admin",
+                    "Admin"
+                ],
+                "summary": "Update Article",
+                "operationId": "update_article_api_v1_articles__slug__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ArticleUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin",
+                    "Admin"
+                ],
+                "summary": "Delete Article",
+                "operationId": "delete_article_api_v1_articles__slug__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/{slug}/related": {
+            "get": {
+                "tags": [
+                    "Articles",
+                    "Articles"
+                ],
+                "summary": "Related Articles",
+                "operationId": "related_articles_api_v1_articles__slug__related_get",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 6,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RelatedArticle"
+                                    },
+                                    "title": "Response Related Articles Api V1 Articles  Slug  Related Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/{slug}/trending": {
+            "get": {
+                "tags": [
+                    "Articles",
+                    "Articles"
+                ],
+                "summary": "Trending Articles",
+                "operationId": "trending_articles_api_v1_articles__slug__trending_get",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TrendingArticle"
+                                    },
+                                    "title": "Response Trending Articles Api V1 Articles  Slug  Trending Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/admin/list": {
+            "get": {
+                "tags": [
+                    "Admin",
+                    "Admin"
+                ],
+                "summary": "Admin List Articles",
+                "operationId": "admin_list_articles_api_v1_articles_admin_list_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "domain_slug",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Domain Slug"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Search"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/": {
+            "post": {
+                "tags": [
+                    "Admin",
+                    "Admin"
+                ],
+                "summary": "Create Article",
+                "operationId": "create_article_api_v1_articles__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ArticleCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/articles/admin/stats": {
+            "get": {
+                "tags": [
+                    "Admin",
+                    "Admin"
+                ],
+                "summary": "Admin Article Stats",
+                "operationId": "admin_article_stats_api_v1_articles_admin_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/navigation/main": {
+            "get": {
+                "tags": [
+                    "Navigation"
+                ],
+                "summary": "Get Navigation Domains",
+                "operationId": "get_navigation_domains_api_v1_navigation_main_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryResponse"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Navigation Domains Api V1 Navigation Main Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/navigation/": {
+            "post": {
+                "tags": [
+                    "Navigation"
+                ],
+                "summary": "Create Category",
+                "operationId": "create_category_api_v1_navigation__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/navigation/{slug}": {
+            "patch": {
+                "tags": [
+                    "Navigation"
+                ],
+                "summary": "Update Category",
+                "operationId": "update_category_api_v1_navigation__slug__patch",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Navigation"
+                ],
+                "summary": "Delete Category",
+                "operationId": "delete_category_api_v1_navigation__slug__delete",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ArticleCreate": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug",
+                        "example": "new-gpt-model"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "content": {
+                        "type": "string",
+                        "title": "Content"
+                    },
+                    "domain_slug": {
+                        "type": "string",
+                        "title": "Domain Slug"
+                    },
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Tags",
+                        "default": []
+                    },
+                    "image": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Image"
+                    },
+                    "is_trending": {
+                        "type": "boolean",
+                        "title": "Is Trending",
+                        "default": false
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "default": "published"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "content",
+                    "domain_slug",
+                    "image"
+                ],
+                "title": "ArticleCreate"
+            },
+            "ArticleDetail": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "domain_slug": {
+                        "type": "string",
+                        "title": "Domain Slug"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/ArticleImage"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Published At"
+                    },
+                    "content": {
+                        "type": "string",
+                        "title": "Content"
+                    },
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Tags"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "domain_slug",
+                    "image",
+                    "published_at",
+                    "content",
+                    "tags"
+                ],
+                "title": "ArticleDetail"
+            },
+            "ArticleImage": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "title": "Url"
+                    },
+                    "credit": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Credit"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "url"
+                ],
+                "title": "ArticleImage"
+            },
+            "ArticleSummary": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "domain_slug": {
+                        "type": "string",
+                        "title": "Domain Slug"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/ArticleImage"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Published At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "domain_slug",
+                    "image",
+                    "published_at"
+                ],
+                "title": "ArticleSummary"
+            },
+            "ArticleUpdate": {
+                "properties": {
+                    "title": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Title"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    },
+                    "content": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Content"
+                    },
+                    "domain_slug": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Domain Slug"
+                    },
+                    "tags": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Tags"
+                    },
+                    "image": {
+                        "anyOf": [
+                            {
+                                "additionalProperties": true,
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image"
+                    },
+                    "is_trending": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Is Trending"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Status"
+                    }
+                },
+                "type": "object",
+                "title": "ArticleUpdate"
+            },
+            "CategoryCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "example": "Artificial Intelligence"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug",
+                        "example": "ai"
+                    },
+                    "order": {
+                        "type": "integer",
+                        "title": "Order",
+                        "default": 0
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active",
+                        "default": true
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "slug"
+                ],
+                "title": "CategoryCreate"
+            },
+            "CategoryResponse": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "example": "Artificial Intelligence"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug",
+                        "example": "ai"
+                    },
+                    "order": {
+                        "type": "integer",
+                        "title": "Order",
+                        "default": 0
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active",
+                        "default": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "slug",
+                    "created_at"
+                ],
+                "title": "CategoryResponse"
+            },
+            "CategoryUpdate": {
+                "properties": {
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name"
+                    },
+                    "order": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Order"
+                    },
+                    "is_active": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Is Active"
+                    }
+                },
+                "type": "object",
+                "title": "CategoryUpdate"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "LoginRequest": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "title": "LoginRequest"
+            },
+            "RelatedArticle": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "domain_slug": {
+                        "type": "string",
+                        "title": "Domain Slug"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "image": {
+                        "$ref": "#/components/schemas/ArticleImage"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "domain_slug",
+                    "description",
+                    "image"
+                ],
+                "title": "RelatedArticle"
+            },
+            "TrendingArticle": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "domain_slug": {
+                        "type": "string",
+                        "title": "Domain Slug"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "domain_slug",
+                    "description"
+                ],
+                "title": "TrendingArticle"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
