@@ -173,7 +173,7 @@ MONGO_DB_NAME=tech_polarity
 
 SECRET_KEY=super-secret-key
 
-ADMIN_EMAIL=admin@techpolarity.com
+ADMIN_EMAIL=admin@gmail.com
 ADMIN_PASSWORD=strong-password
 
 RESEND_API_KEY=re_xxxxxxxxx
