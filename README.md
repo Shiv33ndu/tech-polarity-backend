@@ -235,6 +235,8 @@ Separation of concerns (API / Services / Schemas)
 
 Shvendu Kumar | Machine Learning Engineer
 
+---
+
 ## 📄 License
 
 MIT License
