@@ -212,6 +212,7 @@ Swagger is disabled in production for security.
 
 ---
 
+
 ## 🧠 Design Principles
 
 Separation of concerns (API / Services / Schemas)
