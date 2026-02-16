@@ -234,7 +234,7 @@ Separation of concerns (API / Services / Schemas)
 
 ## Author 
 
-Shvendu Kumar | Machine Learning Engineer | 
+| Shvendu Kumar | Machine Learning Engineer | 
 
 ---
 
