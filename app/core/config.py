@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     # CORS
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
+        "http://localhost:9002",
         "https://tech-polarity-2026.vercel.app",
     ]
 
