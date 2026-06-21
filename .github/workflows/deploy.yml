@@ -26,7 +26,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/tech_polarity_backend:latest
+          tags: ghcr.io/shiv33ndu/tech_polarity_backend:latest
 
   deploy:
     needs: build-and-push
