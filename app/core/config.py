@@ -30,6 +30,7 @@ class Settings(BaseSettings):
         "http://localhost:9002",
         "https://admin-techpolarity.netlify.app",
         "https://tech-polarity-2026.vercel.app",
+        "https://admin-techpolariy.vercel.app",
     ]
 
     # Rate limiting
