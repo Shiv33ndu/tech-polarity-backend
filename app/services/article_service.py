@@ -186,6 +186,22 @@ class ArticleService:
         return data
     
 
+    @staticmethod
+    async def get_articles_by_domain(domain_slug: str, page: int = 1, limit: int = 12):
+        skip = (page - 1) * limit
+        query = {"domain_slug": domain_slug, "status": "published"}
+        cursor = (
+            mongo.database[ARTICLE_COLLECTION]
+            .find(query)
+            .sort("published_at", -1)
+            .skip(skip)
+            .limit(limit)
+        )
+        items = await cursor.to_list(length=limit)
+        total = await mongo.database[ARTICLE_COLLECTION].count_documents(query)
+        items = [serialize_mongo_doc(item) for item in items]
+        return {"items": items, "total": total, "page": page, "limit": limit}
+
     # ADMIN CMS LEVEL (Write operations)
 
     @staticmethod
@@ -291,6 +307,7 @@ class ArticleService:
             "published": 0,
             "draft": 0,
             "deleted": 0,
+            "trending": 0,
         }
 
         for item in results:
@@ -299,5 +316,10 @@ class ArticleService:
             stats["total"] += count
             if status in stats:
                 stats[status] = count
+
+        stats["trending"] = await mongo.database.articles.count_documents({
+            "is_trending": True,
+            "status": "published"
+        })
 
         return stats

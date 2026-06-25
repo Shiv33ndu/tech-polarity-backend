@@ -1,18 +1,19 @@
 # app/api/v1/navigation.py
 """
-This file powers:
-- Header menu
-- Domain filtering
-- CMS-style editing (future admin UI)
+Powers:
+- Header menu (public)
+- Domain filtering (public)
+- CMS category management (admin)
 """
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from app.schemas.category import (
     CategoryResponse,
     CategoryCreate,
     CategoryUpdate,
 )
 from app.services.category_service import CategoryService
+from app.core.security import require_admin
 
 router = APIRouter(prefix="/navigation", tags=["Navigation"])
 
@@ -27,6 +28,7 @@ async def get_navigation_domains():
 @router.post(
     "/",
     status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_admin)],
 )
 async def create_category(payload: CategoryCreate):
     if await CategoryService.category_exists(payload.slug):
@@ -40,7 +42,7 @@ async def create_category(payload: CategoryCreate):
 
 
 # ADMIN — Update Domain
-@router.patch("/{slug}")
+@router.patch("/{slug}", dependencies=[Depends(require_admin)])
 async def update_category(slug: str, payload: CategoryUpdate):
     update_data = {
         k: v for k, v in payload.model_dump().items() if v is not None
@@ -61,7 +63,7 @@ async def update_category(slug: str, payload: CategoryUpdate):
 
 
 # ADMIN — Delete Domain
-@router.delete("/{slug}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{slug}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 async def delete_category(slug: str):
     result = await CategoryService.delete_category(slug)
 
