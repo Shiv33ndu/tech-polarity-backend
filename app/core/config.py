@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:9002",
+        "http://localhost:5173",
+        "http://localhost:5174",
         "https://admin-techpolarity.netlify.app",
         "https://tech-polarity-2026.vercel.app",
         "https://admin-techpolariy.vercel.app",
