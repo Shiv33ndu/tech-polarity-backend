@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 class ArticleImage(BaseModel):
-    url: str
+    url: str = ""
     credit: Optional[str] = None
 
 
