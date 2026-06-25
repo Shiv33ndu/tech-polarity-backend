@@ -34,6 +34,7 @@ class Settings(BaseSettings):
         "https://tech-polarity-2026.vercel.app",
         "https://admin-techpolariy.vercel.app",
         "https://tech-polarity-2026-git-develop-tech-polarity.vercel.app",
+        "https://admin-techpolariy-git-develop-tech-polarity.vercel.app",
     ]
 
     # Rate limiting
