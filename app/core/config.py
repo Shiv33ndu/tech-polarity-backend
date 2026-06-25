@@ -33,6 +33,7 @@ class Settings(BaseSettings):
         "https://admin-techpolarity.netlify.app",
         "https://tech-polarity-2026.vercel.app",
         "https://admin-techpolariy.vercel.app",
+        "https://tech-polarity-2026-git-develop-tech-polarity.vercel.app",
     ]
 
     # Rate limiting
