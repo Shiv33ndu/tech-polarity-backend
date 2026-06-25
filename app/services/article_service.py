@@ -202,6 +202,28 @@ class ArticleService:
         items = [serialize_mongo_doc(item) for item in items]
         return {"items": items, "total": total, "page": page, "limit": limit}
 
+    @staticmethod
+    async def search_articles(query: str, page: int = 1, limit: int = 12):
+        skip = (page - 1) * limit
+        mongo_query = {
+            "status": "published",
+            "$or": [
+                {"title": {"$regex": query, "$options": "i"}},
+                {"description": {"$regex": query, "$options": "i"}},
+            ],
+        }
+        cursor = (
+            mongo.database[ARTICLE_COLLECTION]
+            .find(mongo_query)
+            .sort("published_at", -1)
+            .skip(skip)
+            .limit(limit)
+        )
+        items = await cursor.to_list(length=limit)
+        total = await mongo.database[ARTICLE_COLLECTION].count_documents(mongo_query)
+        items = [serialize_mongo_doc(item) for item in items]
+        return {"items": items, "total": total, "page": page, "limit": limit}
+
     # ADMIN CMS LEVEL (Write operations)
 
     @staticmethod
