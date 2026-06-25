@@ -24,6 +24,16 @@ async def get_navigation_domains():
     return await CategoryService.get_active_categories()
 
 
+# ADMIN — All Domains (including inactive)
+@router.get(
+    "/admin/all",
+    response_model=list[CategoryResponse],
+    dependencies=[Depends(require_admin)],
+)
+async def get_all_navigation_domains():
+    return await CategoryService.get_all_categories()
+
+
 # ADMIN — Create Domain
 @router.post(
     "/",
