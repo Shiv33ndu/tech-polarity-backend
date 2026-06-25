@@ -14,6 +14,15 @@ router = APIRouter(prefix="/articles", tags=["Articles"])
 # PUBLIC ROUTES
 # =====================================================
 
+@router.get("/category/{domain_slug}", tags=["Articles"])
+async def articles_by_category(domain_slug: str, page: int = 1, limit: int = 12):
+    return await ArticleService.get_articles_by_domain(
+        domain_slug=domain_slug,
+        page=page,
+        limit=limit,
+    )
+
+
 @router.get("/{slug}", response_model=ArticleDetail, tags=["Articles"])
 async def get_article(slug: str):
     article = await ArticleService.get_article_by_slug(slug)

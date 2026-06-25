@@ -28,6 +28,7 @@ class ArticleDetail(ArticleBase):
 
 class RelatedArticle(BaseModel):
     title: str
+    slug: str
     domain_slug: str
     description: str
     image: ArticleImage
@@ -35,6 +36,7 @@ class RelatedArticle(BaseModel):
 
 class TrendingArticle(BaseModel):
     title: str
+    slug: str
     domain_slug: str
     description: str
     
