@@ -203,6 +203,34 @@ class ArticleService:
         return {"items": items, "total": total, "page": page, "limit": limit}
 
     @staticmethod
+    async def get_articles_by_section(section_slug: str, page: int = 1, limit: int = 12):
+        skip = (page - 1) * limit
+
+        categories = await mongo.database[CATEGORY_COLLECTION].find(
+            {"section_slug": section_slug, "is_active": True}
+        ).to_list(length=None)
+        domain_slugs = [c["slug"] for c in categories]
+
+        if not domain_slugs:
+            return {"items": [], "total": 0, "page": page, "limit": limit}
+
+        query_filter = {
+            "domain_slug": {"$in": domain_slugs},
+            "status": "published",
+        }
+        cursor = (
+            mongo.database[ARTICLE_COLLECTION]
+            .find(query_filter)
+            .sort("published_at", -1)
+            .skip(skip)
+            .limit(limit)
+        )
+        items = await cursor.to_list(length=limit)
+        total = await mongo.database[ARTICLE_COLLECTION].count_documents(query_filter)
+        items = [serialize_mongo_doc(item) for item in items]
+        return {"items": items, "total": total, "page": page, "limit": limit}
+
+    @staticmethod
     async def search_articles(query: str, page: int = 1, limit: int = 12):
         skip = (page - 1) * limit
         mongo_query = {

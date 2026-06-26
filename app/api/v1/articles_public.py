@@ -23,6 +23,15 @@ async def articles_by_category(domain_slug: str, page: int = 1, limit: int = 12)
     )
 
 
+@router.get("/section/{section_slug}", tags=["Articles"])
+async def articles_by_section(section_slug: str, page: int = 1, limit: int = 12):
+    return await ArticleService.get_articles_by_section(
+        section_slug=section_slug,
+        page=page,
+        limit=limit,
+    )
+
+
 @router.get("/search", tags=["Articles"])
 async def search_articles(q: str, page: int = 1, limit: int = 12):
     return await ArticleService.search_articles(
