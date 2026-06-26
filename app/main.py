@@ -11,7 +11,7 @@ from app.core.rate_limit import limiter
 from app.db.mongo import connect_to_mongo, close_mongo_connection
 
 # Routers (will be implemented next)
-from app.api.v1 import articles_admin, home, navigation, auth, articles_public, contact, health
+from app.api.v1 import articles_admin, home, navigation, auth, articles_public, contact, health, sections
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -55,6 +55,7 @@ def create_app() -> FastAPI:
     app.include_router(articles_public.router, prefix=settings.API_V1_PREFIX)
     app.include_router(articles_admin.router, prefix=settings.API_V1_PREFIX)
     app.include_router(navigation.router, prefix=settings.API_V1_PREFIX)
+    app.include_router(sections.router, prefix=settings.API_V1_PREFIX)
     app.include_router(contact.router, prefix=settings.API_V1_PREFIX)
     app.include_router(health.router, prefix=settings.API_V1_PREFIX)
 
