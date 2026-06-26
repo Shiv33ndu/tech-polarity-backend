@@ -13,6 +13,7 @@ from app.schemas.category import (
     CategoryUpdate,
 )
 from app.services.category_service import CategoryService
+from app.services.section_service import SectionService
 from app.core.security import require_admin
 
 router = APIRouter(prefix="/navigation", tags=["Navigation"])
@@ -47,6 +48,12 @@ async def create_category(payload: CategoryCreate):
             detail="Category with this slug already exists",
         )
 
+    if payload.section_slug and not await SectionService.section_exists(payload.section_slug):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid section",
+        )
+
     await CategoryService.create_category(payload.model_dump())
     return {"message": "Category created successfully"}
 
@@ -62,6 +69,12 @@ async def update_category(slug: str, payload: CategoryUpdate):
         raise HTTPException(
             status_code=400,
             detail="No fields provided for update",
+        )
+
+    if "section_slug" in update_data and not await SectionService.section_exists(update_data["section_slug"]):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid section",
         )
 
     result = await CategoryService.update_category(slug, update_data)
