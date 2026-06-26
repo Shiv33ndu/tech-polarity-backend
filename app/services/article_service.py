@@ -285,15 +285,7 @@ class ArticleService:
     
     @staticmethod
     async def delete_article(slug: str):
-        return await mongo.database.articles.update_one(
-            {"slug": slug, "status": {"$ne": "deleted"}},
-            {
-                "$set": {
-                    "status": "deleted",
-                    "updated_at": datetime.utcnow()
-                }
-            }
-        )
+        return await mongo.database.articles.delete_one({"slug": slug})
     
     @staticmethod
     async def list_articles(
