@@ -111,10 +111,10 @@ async def delete_article(request: Request, slug: str):
 
     result = await ArticleService.delete_article(slug)
 
-    if result.matched_count == 0:
+    if result.deleted_count == 0:
         raise HTTPException(
             status_code=404,
-            detail="Article not found or already deleted",
+            detail="Article not found",
         )
 
 @router.get(
