@@ -42,6 +42,20 @@ async def _create_indexes():
     await database.articles.create_index("domain_slug")
     await database.articles.create_index("is_trending")
     await database.articles.create_index("published_at")
+    await database.articles.create_index("status")
+
+    # Full-text search index with relevance weights
+    await database.articles.create_index(
+        [
+            ("title", "text"),
+            ("description", "text"),
+            ("tags", "text"),
+            ("content", "text"),
+        ],
+        weights={"title": 10, "tags": 5, "description": 3, "content": 1},
+        name="article_text_search",
+        default_language="english",
+    )
 
     # Contacts
     await database.contacts.create_index("created_at")
