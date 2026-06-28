@@ -37,6 +37,7 @@ class Settings(BaseSettings):
         "https://tech-polarity-2026-roan.vercel.app",
         "https://admin-techpolariy-git-develop-tech-polarity.vercel.app",
         "https://admin-techpolariy-git-main-tech-polarity.vercel.app",
+        "https://resplendent-axolotl-034f95.netlify.app",
     ]
 
     # Rate limiting
