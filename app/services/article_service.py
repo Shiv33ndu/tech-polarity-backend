@@ -233,22 +233,43 @@ class ArticleService:
     @staticmethod
     async def search_articles(query: str, page: int = 1, limit: int = 12):
         skip = (page - 1) * limit
-        mongo_query = {
-            "status": "published",
-            "$or": [
-                {"title": {"$regex": query, "$options": "i"}},
-                {"description": {"$regex": query, "$options": "i"}},
-            ],
-        }
-        cursor = (
-            mongo.database[ARTICLE_COLLECTION]
-            .find(mongo_query)
-            .sort("published_at", -1)
-            .skip(skip)
-            .limit(limit)
-        )
-        items = await cursor.to_list(length=limit)
-        total = await mongo.database[ARTICLE_COLLECTION].count_documents(mongo_query)
+
+        try:
+            # Use MongoDB text index for relevance-ranked results across
+            # title (weight 10), tags (5), description (3), content (1)
+            mongo_query = {
+                "status": "published",
+                "$text": {"$search": query},
+            }
+            cursor = (
+                mongo.database[ARTICLE_COLLECTION]
+                .find(mongo_query, {"score": {"$meta": "textScore"}})
+                .sort([("score", {"$meta": "textScore"}), ("published_at", -1)])
+                .skip(skip)
+                .limit(limit)
+            )
+            items = await cursor.to_list(length=limit)
+            total = await mongo.database[ARTICLE_COLLECTION].count_documents(mongo_query)
+        except Exception:
+            # Fallback to regex search if text index is unavailable
+            mongo_query = {
+                "status": "published",
+                "$or": [
+                    {"title": {"$regex": query, "$options": "i"}},
+                    {"description": {"$regex": query, "$options": "i"}},
+                    {"tags": {"$elemMatch": {"$regex": query, "$options": "i"}}},
+                ],
+            }
+            cursor = (
+                mongo.database[ARTICLE_COLLECTION]
+                .find(mongo_query)
+                .sort("published_at", -1)
+                .skip(skip)
+                .limit(limit)
+            )
+            items = await cursor.to_list(length=limit)
+            total = await mongo.database[ARTICLE_COLLECTION].count_documents(mongo_query)
+
         items = [serialize_mongo_doc(item) for item in items]
         return {"items": items, "total": total, "page": page, "limit": limit}
 
