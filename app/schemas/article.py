@@ -24,6 +24,7 @@ class ArticleSummary(ArticleBase):
 class ArticleDetail(ArticleBase):
     content: str
     tags: List[str]
+    summary: Optional[str] = None
 
 
 class RelatedArticle(BaseModel):
@@ -45,6 +46,7 @@ class ArticleCreate(BaseModel):
     title: str
     slug: str = Field(..., example="new-gpt-model")
     description: str
+    summary: Optional[str] = None
     content: str
     domain_slug: str
     tags: List[str] = []
@@ -56,6 +58,7 @@ class ArticleCreate(BaseModel):
 class ArticleUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
+    summary: Optional[str] = None
     content: Optional[str] = None
     domain_slug: Optional[str] = None
     tags: Optional[List[str]] = None
