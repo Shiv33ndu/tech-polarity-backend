@@ -12,6 +12,7 @@ from app.db.mongo import connect_to_mongo, close_mongo_connection
 
 # Routers (will be implemented next)
 from app.api.v1 import articles_admin, home, navigation, auth, articles_public, contact, health, sections
+from app.api import sitemap
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -58,6 +59,7 @@ def create_app() -> FastAPI:
     app.include_router(sections.router, prefix=settings.API_V1_PREFIX)
     app.include_router(contact.router, prefix=settings.API_V1_PREFIX)
     app.include_router(health.router, prefix=settings.API_V1_PREFIX)
+    app.include_router(sitemap.router)
 
     return app
 
