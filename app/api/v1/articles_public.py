@@ -56,7 +56,10 @@ async def related_articles(slug: str, limit: int = 6):
         raise HTTPException(status_code=404, detail="Article not found")
 
     return await ArticleService.get_related_articles(
-        domain_slug=article["domain_slug"],
+        exclude_slug=slug,
+        domain_slug=article.get("domain_slug", ""),
+        section_slug=article.get("section_slug", ""),
+        tags=article.get("tags", []),
         limit=limit,
     )
 
