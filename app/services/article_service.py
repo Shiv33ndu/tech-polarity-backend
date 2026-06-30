@@ -20,19 +20,76 @@ class ArticleService:
         )
 
     @staticmethod
-    async def get_related_articles(domain_slug: str, limit: int):
-        cursor = (
-            mongo.database[ARTICLE_COLLECTION]
-            .find(
-                {
-                    "domain_slug": domain_slug,
-                    "status": "published"
+    async def get_related_articles(
+        exclude_slug: str,
+        domain_slug: str,
+        section_slug: str,
+        tags: list,
+        limit: int,
+    ):
+        pipeline = [
+            {
+                "$match": {
+                    "status": "published",
+                    "slug": {"$ne": exclude_slug},
                 }
+            },
+            {
+                "$addFields": {
+                    "relevance_score": {
+                        "$add": [
+                            # +3 per overlapping tag
+                            {
+                                "$multiply": [
+                                    3,
+                                    {
+                                        "$size": {
+                                            "$ifNull": [
+                                                {
+                                                    "$setIntersection": [
+                                                        {"$ifNull": ["$tags", []]},
+                                                        tags,
+                                                    ]
+                                                },
+                                                [],
+                                            ]
+                                        }
+                                    },
+                                ]
+                            },
+                            # +2 for same sub-category
+                            {"$cond": [{"$eq": ["$domain_slug", domain_slug]}, 2, 0]},
+                            # +1 for same section/header
+                            {"$cond": [{"$eq": ["$section_slug", section_slug]}, 1, 0]},
+                        ]
+                    }
+                }
+            },
+            {"$match": {"relevance_score": {"$gt": 0}}},
+            {"$sort": {"relevance_score": -1, "published_at": -1}},
+            {"$limit": limit},
+        ]
+
+        results = await mongo.database[ARTICLE_COLLECTION].aggregate(pipeline).to_list(length=limit)
+
+        # Fallback: if not enough results, fill with recent articles from same sub-category
+        if len(results) < limit:
+            existing_slugs = {r["slug"] for r in results} | {exclude_slug}
+            fallback_cursor = (
+                mongo.database[ARTICLE_COLLECTION]
+                .find(
+                    {
+                        "status": "published",
+                        "slug": {"$nin": list(existing_slugs)},
+                        "domain_slug": domain_slug,
+                    }
+                )
+                .sort("published_at", -1)
+                .limit(limit - len(results))
             )
-            .sort("published_at", -1)
-            .limit(limit)
-        )
-        return await cursor.to_list(length=limit)
+            results += await fallback_cursor.to_list(length=limit - len(results))
+
+        return results
 
     @staticmethod
     async def get_article_by_slug(slug: str):
