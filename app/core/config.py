@@ -40,6 +40,7 @@ class Settings(BaseSettings):
         "https://resplendent-axolotl-034f95.netlify.app",
         "https://www.techpolarity.com",
         "https://techpolarity.com",
+        "https://admin.techpolarity.com",
     ]
 
     # Rate limiting
