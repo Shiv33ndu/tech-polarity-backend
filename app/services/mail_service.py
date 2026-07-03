@@ -21,7 +21,7 @@ class MailService:
                     "Content-Type": "application/json",
                 },
                 json={
-                    "from": "Tech Polarity <onboarding@resend.dev>",
+                    "from": "Tech Polarity <noreply@techpolarity.com>",
                     "to": [settings.CONTACT_TO_EMAIL],
                     "subject": "New Contact Message",
                     "html": f"""
