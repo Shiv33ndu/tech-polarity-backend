@@ -155,6 +155,31 @@ class ArticleService:
             .to_list(length=limit)
         )
 
+    # 🔹 Trending within a Section (across all its sub-categories)
+    @staticmethod
+    async def get_trending_by_section(section_slug: str, limit: int = 5):
+        categories = await mongo.database[CATEGORY_COLLECTION].find(
+            {"section_slug": section_slug, "is_active": True}
+        ).to_list(length=None)
+        domain_slugs = [c["slug"] for c in categories]
+
+        if not domain_slugs:
+            return []
+
+        cursor = (
+            mongo.database[ARTICLE_COLLECTION]
+            .find(
+                {
+                    "domain_slug": {"$in": domain_slugs},
+                    "is_trending": True,
+                    "status": "published",
+                }
+            )
+            .sort("published_at", -1)
+            .limit(limit)
+        )
+        return await cursor.to_list(length=limit)
+
     # 🔹 Trending across ALL domains (Tech Barometer)
     @staticmethod
     async def get_trending_global(limit: int = 10):

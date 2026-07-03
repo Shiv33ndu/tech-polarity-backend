@@ -51,3 +51,11 @@ async def trending_by_domain(domain_slug: str, limit: int = 5):
 @router.get("/trending-global", response_model=list[TrendingArticle])
 async def trending_global(limit: int = 10):
     return await ArticleService.get_trending_global(limit=limit)
+
+
+@router.get("/trending-by-section", response_model=list[TrendingArticle])
+async def trending_by_section(section_slug: str, limit: int = 5):
+    return await ArticleService.get_trending_by_section(
+        section_slug=section_slug,
+        limit=limit
+    )
