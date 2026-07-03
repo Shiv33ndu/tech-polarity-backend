@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 from app.services.article_service import ArticleService
-from app.schemas.article import ArticleSummary, TrendingArticle
+from app.schemas.article import ArticleSummary, TrendingArticle, TrendingBySection
 
 router = APIRouter(prefix="/home", tags=["Home"])
 
@@ -53,9 +53,6 @@ async def trending_global(limit: int = 10):
     return await ArticleService.get_trending_global(limit=limit)
 
 
-@router.get("/trending-by-section", response_model=list[TrendingArticle])
-async def trending_by_section(section_slug: str, limit: int = 5):
-    return await ArticleService.get_trending_by_section(
-        section_slug=section_slug,
-        limit=limit
-    )
+@router.get("/trending-by-section", response_model=list[TrendingBySection])
+async def trending_by_section():
+    return await ArticleService.get_top_trending_per_section()

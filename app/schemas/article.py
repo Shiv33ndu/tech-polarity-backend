@@ -40,7 +40,12 @@ class TrendingArticle(BaseModel):
     slug: str
     domain_slug: str
     description: str
-    
+
+
+class TrendingBySection(TrendingArticle):
+    section_slug: str
+    section_name: str
+
 
 class ArticleCreate(BaseModel):
     title: str

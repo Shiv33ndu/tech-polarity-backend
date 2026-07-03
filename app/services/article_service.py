@@ -155,30 +155,50 @@ class ArticleService:
             .to_list(length=limit)
         )
 
-    # 🔹 Trending within a Section (across all its sub-categories)
+    # 🔹 Top trending article from EACH Section (one per section)
     @staticmethod
-    async def get_trending_by_section(section_slug: str, limit: int = 5):
-        categories = await mongo.database[CATEGORY_COLLECTION].find(
-            {"section_slug": section_slug, "is_active": True}
-        ).to_list(length=None)
-        domain_slugs = [c["slug"] for c in categories]
-
-        if not domain_slugs:
-            return []
-
-        cursor = (
-            mongo.database[ARTICLE_COLLECTION]
-            .find(
-                {
-                    "domain_slug": {"$in": domain_slugs},
-                    "is_trending": True,
-                    "status": "published",
+    async def get_top_trending_per_section():
+        pipeline = [
+            {"$match": {"status": "published", "is_trending": True}},
+            {
+                "$lookup": {
+                    "from": CATEGORY_COLLECTION,
+                    "localField": "domain_slug",
+                    "foreignField": "slug",
+                    "as": "category",
                 }
-            )
-            .sort("published_at", -1)
-            .limit(limit)
-        )
-        return await cursor.to_list(length=limit)
+            },
+            {"$unwind": "$category"},
+            {"$match": {"category.is_active": True, "category.section_slug": {"$ne": None}}},
+            {
+                "$lookup": {
+                    "from": "sections",
+                    "localField": "category.section_slug",
+                    "foreignField": "slug",
+                    "as": "section",
+                }
+            },
+            {"$unwind": "$section"},
+            {"$match": {"section.is_active": True}},
+            {"$sort": {"published_at": -1}},
+            {
+                "$group": {
+                    "_id": "$category.section_slug",
+                    "section_name": {"$first": "$section.name"},
+                    "article": {"$first": "$$ROOT"},
+                }
+            },
+        ]
+
+        results = await mongo.database[ARTICLE_COLLECTION].aggregate(pipeline).to_list(length=None)
+        return [
+            {
+                "section_slug": r["_id"],
+                "section_name": r["section_name"],
+                **{k: v for k, v in r["article"].items() if k not in ("category", "section", "_id")},
+            }
+            for r in results
+        ]
 
     # 🔹 Trending across ALL domains (Tech Barometer)
     @staticmethod
