@@ -32,8 +32,8 @@ async def tech_barometer():
 
     return [
         {
-            "domain": d["_id"],
-            "label": d["category"]["name"],
+            "section": d["_id"],
+            "label": d["section"]["name"],
             "score": d["score"]
         }
         for d in data

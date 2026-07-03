@@ -177,17 +177,13 @@ class ArticleService:
         now = datetime.now(ZoneInfo("Asia/Kolkata"))
 
         pipeline = [
-            {
-                "$match": {
-                    "status": "published"
-                }
-            },
+            {"$match": {"status": "published"}},
             {
                 "$addFields": {
                     "hours_since_publish": {
                         "$divide": [
                             {"$subtract": [now, "$published_at"]},
-                            1000 * 60 * 60
+                            1000 * 60 * 60,
                         ]
                     }
                 }
@@ -197,36 +193,40 @@ class ArticleService:
                     "article_heat": {
                         "$add": [
                             {"$cond": ["$is_trending", 50, 0]},
-                            {
-                                "$max": [
-                                    0,
-                                    {"$subtract": [50, "$hours_since_publish"]}
-                                ]
-                            }
+                            {"$max": [0, {"$subtract": [50, "$hours_since_publish"]}]},
                         ]
                     }
                 }
             },
-            {
-                "$group": {
-                    "_id": "$domain_slug",
-                    "total_heat": {"$sum": "$article_heat"}
-                }
-            },
+            # Join to categories to get section_slug
             {
                 "$lookup": {
                     "from": "categories",
-                    "localField": "_id",
+                    "localField": "domain_slug",
                     "foreignField": "slug",
-                    "as": "category"
+                    "as": "category",
                 }
             },
             {"$unwind": "$category"},
+            {"$match": {"category.is_active": True, "category.section_slug": {"$ne": None}}},
+            # Group by section
             {
-                "$match": {
-                    "category.is_active": True
+                "$group": {
+                    "_id": "$category.section_slug",
+                    "total_heat": {"$sum": "$article_heat"},
                 }
-            }
+            },
+            # Join to sections to get section name
+            {
+                "$lookup": {
+                    "from": "sections",
+                    "localField": "_id",
+                    "foreignField": "slug",
+                    "as": "section",
+                }
+            },
+            {"$unwind": "$section"},
+            {"$match": {"section.is_active": True}},
         ]
 
         data = await mongo.database.articles.aggregate(pipeline).to_list(length=None)
@@ -234,9 +234,7 @@ class ArticleService:
         if not data:
             return []
 
-        # Normalize to 0–100
         max_heat = max(d["total_heat"] for d in data)
-
         for d in data:
             d["score"] = round((d["total_heat"] / max_heat) * 100)
 
